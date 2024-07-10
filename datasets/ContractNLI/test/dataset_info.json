@@ -1,0 +1,63 @@
+{
+  "builder_name": "contract-nli",
+  "citation": "@inproceedings{koreeda-manning-2021-contractnli-dataset,\n        title = \"{C}ontract{NLI}: A Dataset for Document-level Natural Language Inference for Contracts\",\n        author = \"Koreeda, Yuta  and\n          Manning, Christopher\",\n        booktitle = \"Findings of the Association for Computational Linguistics: EMNLP 2021\",\n        month = nov,\n        year = \"2021\",\n        address = \"Punta Cana, Dominican Republic\",\n        publisher = \"Association for Computational Linguistics\",\n        url = \"https://aclanthology.org/2021.findings-emnlp.164\",\n        doi = \"10.18653/v1/2021.findings-emnlp.164\",\n        pages = \"1907--1919\",\n    }\n}\n @inproceedings{koreeda-manning-2021-contractnli-dataset,\n    title = \"{C}ontract{NLI}: A Dataset for Document-level Natural Language Inference for Contracts\",\n    author = \"Koreeda, Yuta  and\n      Manning, Christopher\",\n    booktitle = \"Findings of the Association for Computational Linguistics: EMNLP 2021\",\n    month = nov,\n    year = \"2021\",\n    address = \"Punta Cana, Dominican Republic\",\n    publisher = \"Association for Computational Linguistics\",\n    url = \"https://aclanthology.org/2021.findings-emnlp.164\",\n    doi = \"10.18653/v1/2021.findings-emnlp.164\",\n    pages = \"1907--1919\",\n}",
+  "config_name": "contractnli_a",
+  "dataset_name": "contract-nli",
+  "dataset_size": 7519279,
+  "description": "The ContractNLI dataset consists of Non-Disclosure Agreements (NDAs). All NDAs have been labeled based \non several hypothesis templates as entailment, neutral or contradiction. In this version of the task\n(Task A), the input consists of the relevant part of the document w.r.t. to the hypothesis.\n",
+  "download_checksums": {
+    "https://huggingface.co/datasets/cognitivplus/contract-nli/resolve/main/contract_nli.zip": {
+      "num_bytes": 723022,
+      "checksum": null
+    }
+  },
+  "download_size": 723022,
+  "features": {
+    "premise": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "hypothesis": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "label": {
+      "names": [
+        "contradiction",
+        "entailment",
+        "neutral"
+      ],
+      "_type": "ClassLabel"
+    }
+  },
+  "homepage": "https://stanfordnlp.github.io/ contract- nli/",
+  "license": "",
+  "size_in_bytes": 8242301,
+  "splits": {
+    "train": {
+      "name": "train",
+      "num_bytes": 5177216,
+      "num_examples": 6819,
+      "dataset_name": "contract-nli"
+    },
+    "test": {
+      "name": "test",
+      "num_bytes": 1547224,
+      "num_examples": 1991,
+      "dataset_name": "contract-nli"
+    },
+    "validation": {
+      "name": "validation",
+      "num_bytes": 794839,
+      "num_examples": 978,
+      "dataset_name": "contract-nli"
+    }
+  },
+  "version": {
+    "version_str": "1.0.0",
+    "description": "",
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  }
+}
