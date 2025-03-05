@@ -1,27 +1,37 @@
-describe('CollateralTaskStepsMapperService', () => {
-  let service: CollateralTaskStepsMapperService;
+describe('mapDocData', () => {
+  it('should process DOCList type correctly', () => {
+    const docContainer = { dataMapModel: [{ type: 'DOCLIST', name: 'testName' }] };
+    spyOn(service.taskHydrateDataService, 'getObjectValue').and.returnValue({ test: 'value' });
 
-  beforeEach(() => {
-    service = new CollateralTaskStepsMapperService();
+    service.mapDocData(docContainer);
+
+    expect(service.taskHydrateDataService.getObjectValue).toHaveBeenCalled();
   });
 
-  describe('updateDocumentContainer', () => {
-    it('should call mapDocData when docContainer is not empty', () => {
-      service.taskProfileConfig = { docContainer: { test: 'data' } };
-      spyOn(service, 'mapDocData');
+  it('should process DOCDESC type correctly', () => {
+    const docContainer = { dataMapModel: [{ type: 'DOCDESC', name: 'path.to.value' }] };
+    spyOn(service.taskHydrateDataService, 'getObjectValue').and.returnValue('description');
 
-      service.updateDocumentContainer();
+    service.mapDocData(docContainer);
 
-      expect(service.mapDocData).toHaveBeenCalledWith(service.taskProfileConfig.docContainer);
-    });
+    expect(service.taskHydrateDataService.getObjectValue).toHaveBeenCalled();
+  });
 
-    it('should not call mapDocData when docContainer is empty', () => {
-      service.taskProfileConfig = { docContainer: {} };
-      spyOn(service, 'mapDocData');
+  it('should process NSHDATA type correctly', () => {
+    const docContainer = { dataMapModel: [{ type: 'NSHDATA', name: 'testNSH' }] };
+    spyOn(service.taskHydrateDataService, 'getObjectValue').and.returnValue(null);
 
-      service.updateDocumentContainer();
+    service.mapDocData(docContainer);
 
-      expect(service.mapDocData).not.toHaveBeenCalled();
-    });
+    expect(docContainer.notesAndStipulationHistory['notesAndStipHistoryData']).toEqual([]);
+  });
+
+  it('should not process when dataMapModel is empty', () => {
+    const docContainer = { dataMapModel: [] };
+    spyOn(service.taskHydrateDataService, 'getObjectValue');
+
+    service.mapDocData(docContainer);
+
+    expect(service.taskHydrateDataService.getObjectValue).not.toHaveBeenCalled();
   });
 });
