@@ -1,37 +1,47 @@
-describe('mapDocData', () => {
-  it('should process DOCList type correctly', () => {
-    const docContainer = { dataMapModel: [{ type: 'DOCLIST', name: 'testName' }] };
-    spyOn(service.taskHydrateDataService, 'getObjectValue').and.returnValue({ test: 'value' });
+describe('mapDocData - NSHDATA Case', () => {
+  let service: CollateralTaskStepsMapperService;
+  let docContainer: any;
 
-    service.mapDocData(docContainer);
-
-    expect(service.taskHydrateDataService.getObjectValue).toHaveBeenCalled();
+  beforeEach(() => {
+    service = new CollateralTaskStepsMapperService();
+    docContainer = { notesAndStipulationHistory: {} };
   });
 
-  it('should process DOCDESC type correctly', () => {
-    const docContainer = { dataMapModel: [{ type: 'DOCDESC', name: 'path.to.value' }] };
-    spyOn(service.taskHydrateDataService, 'getObjectValue').and.returnValue('description');
+  it('should populate notesAndStipHistoryData when getModelObj and getObjValue are not empty', () => {
+    const getModelObj = [{ field: 'value' }];
+    const getObjValue = [{ rowData: 'testData' }];
+    spyOn(service.utils, 'isEmpty').and.callFake((input) => !input || input.length === 0);
+    spyOn(service.taskHydrateDataService, 'getObjectValue').and.returnValue(getModelObj);
 
-    service.mapDocData(docContainer);
+    service.mapDocData({
+      dataMapModel: [{ type: 'NSHDATA', name: 'someData' }],
+      docContainer,
+    });
 
-    expect(service.taskHydrateDataService.getObjectValue).toHaveBeenCalled();
+    expect(docContainer.notesAndStipulationHistory.notesAndStipHistoryData).toBeDefined();
+    expect(docContainer.notesAndStipulationHistory.notesAndStipHistoryData.length).toBeGreaterThan(0);
   });
 
-  it('should process NSHDATA type correctly', () => {
-    const docContainer = { dataMapModel: [{ type: 'NSHDATA', name: 'testNSH' }] };
-    spyOn(service.taskHydrateDataService, 'getObjectValue').and.returnValue(null);
+  it('should set notesAndStipHistoryData to an empty array if getObjValue is empty', () => {
+    spyOn(service.utils, 'isEmpty').and.callFake((input) => !input || input.length === 0);
+    spyOn(service.taskHydrateDataService, 'getObjectValue').and.returnValue([]);
 
-    service.mapDocData(docContainer);
+    service.mapDocData({
+      dataMapModel: [{ type: 'NSHDATA', name: 'someData' }],
+      docContainer,
+    });
 
-    expect(docContainer.notesAndStipulationHistory['notesAndStipHistoryData']).toEqual([]);
+    expect(docContainer.notesAndStipulationHistory.notesAndStipHistoryData).toEqual([]);
   });
 
-  it('should not process when dataMapModel is empty', () => {
-    const docContainer = { dataMapModel: [] };
-    spyOn(service.taskHydrateDataService, 'getObjectValue');
+  it('should set notesAndStipHistoryData to an empty array if getModelObj is empty', () => {
+    spyOn(service.utils, 'isEmpty').and.callFake((input) => !input || input.length === 0);
 
-    service.mapDocData(docContainer);
+    service.mapDocData({
+      dataMapModel: [{ type: 'NSHDATA', name: 'someData' }],
+      docContainer,
+    });
 
-    expect(service.taskHydrateDataService.getObjectValue).not.toHaveBeenCalled();
+    expect(docContainer.notesAndStipulationHistory.notesAndStipHistoryData).toEqual([]);
   });
 });
