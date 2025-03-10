@@ -7,9 +7,8 @@ describe('processComponentDependencies', () => {
       id: 1
     };
 
-    spyOn(service.utils, 'isEmpty').and.returnValue(false);
-
     const dependencyValidationList = [false, true, false];
+
     spyOn(service, 'processDataMap').and.returnValue(dependencyValidationList);
 
     const result = service.processComponentDependencies(taskStep, compConfig);
@@ -24,9 +23,8 @@ describe('processComponentDependencies', () => {
       id: 1
     };
 
-    spyOn(service.utils, 'isEmpty').and.returnValue(false);
-
     const dependencyValidationList = [true, true, true];
+
     spyOn(service, 'processDataMap').and.returnValue(dependencyValidationList);
 
     const result = service.processComponentDependencies(taskStep, compConfig);
@@ -42,9 +40,8 @@ describe('processComponentDependencies', () => {
       id: 1
     };
 
-    spyOn(service.utils, 'isEmpty').and.returnValue(false);
-
     const dependencyValidationList = [true];
+
     spyOn(service, 'processDataMap').and.returnValue(dependencyValidationList);
 
     service.processComponentDependencies(taskStep, compConfig);
@@ -60,8 +57,6 @@ describe('processComponentDependencies', () => {
       id: 1
     };
 
-    spyOn(service.utils, 'isEmpty').and.returnValue(false);
-
     service.processComponentDependencies(taskStep, compConfig);
 
     expect(targetComponent.selected).toEqual([]);
@@ -75,9 +70,8 @@ describe('processComponentDependencies', () => {
       id: 1
     };
 
-    spyOn(service.utils, 'isEmpty').and.returnValue(false);
-
     const dependencyValidationList = [true];
+
     spyOn(service, 'processDataMap').and.returnValue(dependencyValidationList);
 
     service.processComponentDependencies(taskStep, compConfig);
