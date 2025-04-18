@@ -1,38 +1,18 @@
 describe('triggerBrowserEventsForDisposition', () => {
-  let service: any;
-
-  const mockTaskStepService = {
-    dispositionData: jasmine.createSpy()
-  };
-
-  const mockLoggerService = {
-    log: jasmine.createSpy()
-  };
-
-  const mockApprovalLayerService = {
-    hideSpinner: jasmine.createSpy()
-  };
-
-  const mockRouter = {
-    navigate: jasmine.createSpy()
-  };
-
-  const mockAppStateMgmt = {
-    getCurrentTask: jasmine.createSpy().and.returnValue({ subTasks: ['sub1'] }),
-    updateSubtaskForBrowserEvents: jasmine.createSpy()
-  };
+  let service: CollateralTaskStepsMapperService;
+  let router: Router;
+  let taskStepService: any;
+  let loggerService: any;
+  let approvalLayerService: any;
+  let appStateMgmt: any;
 
   beforeEach(() => {
-    service = new CollateralTaskStepsMapperService(
-      {}, // other args if needed
-      {}, 
-      mockTaskStepService,
-      {},
-      mockLoggerService,
-      mockRouter,
-      mockAppStateMgmt,
-      mockApprovalLayerService
-    );
+    service = TestBed.inject(CollateralTaskStepsMapperService);
+    router = TestBed.inject(Router);
+    taskStepService = TestBed.inject(CollateralTaskStepService);
+    loggerService = TestBed.inject(LoggerService);
+    approvalLayerService = TestBed.inject(ApprovalLayerService);
+    appStateMgmt = TestBed.inject(CollateralTaskMapperService);
 
     service.taskProfileConfig = {
       profileInfo: {
@@ -45,6 +25,8 @@ describe('triggerBrowserEventsForDisposition', () => {
     service.contextService = {
       getUserContext: () => ({ userName: 'testUser' })
     };
+
+    spyOn(appStateMgmt, 'getCurrentTask').and.returnValue({ subTasks: ['sub1'] });
   });
 
   it('should call dispositionData and navigate on success', (done) => {
@@ -55,30 +37,34 @@ describe('triggerBrowserEventsForDisposition', () => {
       subTasks: ['sub1']
     };
 
-    mockTaskStepService.dispositionData.and.returnValue(of({}));
+    spyOn(taskStepService, 'dispositionData').and.returnValue(of({}));
+    spyOn(approvalLayerService, 'hideSpinner');
+    spyOn(router, 'navigate');
 
     service.triggerBrowserEventsForDisposition().then(() => {
-      expect(mockTaskStepService.dispositionData).toHaveBeenCalledWith(expectedRequest);
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/nfe-collateral-task-web', 'home']);
-      expect(mockApprovalLayerService.hideSpinner).toHaveBeenCalled();
+      expect(taskStepService.dispositionData).toHaveBeenCalledWith(expectedRequest);
+      expect(router.navigate).toHaveBeenCalledWith(['/nfe-collateral-task-web', 'home']);
+      expect(approvalLayerService.hideSpinner).toHaveBeenCalled();
       done();
     });
   });
 
   it('should navigate to 500 and hide spinner on error', (done) => {
-    mockTaskStepService.dispositionData.and.returnValue(throwError(() => new Error('Error')));
+    spyOn(taskStepService, 'dispositionData').and.returnValue(throwError(() => new Error('Error')));
+    spyOn(router, 'navigate');
+    spyOn(approvalLayerService, 'hideSpinner');
     spyOn(console, 'error');
 
     service.triggerBrowserEventsForDisposition().catch(() => {
       expect(console.error).toHaveBeenCalled();
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/500']);
-      expect(mockApprovalLayerService.hideSpinner).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalledWith(['/500']);
+      expect(approvalLayerService.hideSpinner).toHaveBeenCalled();
       done();
     });
   });
 
   it('should resolve immediately when profileInfo is not available', (done) => {
-    service.taskProfileConfig.profileInfo = null;
+    service.taskProfileConfig.profileInfo = null as any;
     spyOn(service, 'hideLeftNavBar');
 
     service.triggerBrowserEventsForDisposition().then(() => {
